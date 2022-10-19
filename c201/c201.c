@@ -151,6 +151,7 @@ void List_DeleteFirst( List *list ) {
 
 	if (list->firstElement != NULL) // if is not empty
 	{
+		elemPtr = list->firstElement; // ptr to "first"
 		if (list->activeElement == list->firstElement) // first is active
 			list->activeElement = NULL; // not active
 		if (list->firstElement->nextElement != NULL) // only one element exists
