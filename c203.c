@@ -94,9 +94,9 @@ void Queue_Error( int error_code ) {
  * @param stack Ukazatel na strukturu fronty
  */
 void Queue_Init( Queue *queue ) {
-	if (queue == NULL)
+	if (queue == NULL)			
 		Queue_Error(QERR_INIT);
-	for (int i = 0; i < QUEUE_SIZE; i++)
+	for (int i = 0; i < QUEUE_SIZE; i++) // '*' on all indexes
 		queue->array[i] = '*';
 	queue->firstIndex = 0;
 	queue->freeIndex = 0;
@@ -110,7 +110,7 @@ void Queue_Init( Queue *queue ) {
  * @param index Aktuální index
  */
 int nextIndex( int index ) {
-	return (index + 1) % QUEUE_SIZE;
+	return (index + 1) % QUEUE_SIZE; // ex: 99+1 % 100 = 0 => next element will be on 0 index 
 }
 
 /**
@@ -131,9 +131,7 @@ int Queue_IsEmpty( const Queue *queue ) {
  * @param queue Ukazatel na inicializovanou strukturu fronty
  */
 int Queue_IsFull( const Queue *queue ) {
-	// return  ((queue->firstIndex - 1 == queue->freeIndex) ||
-	// 		((queue->firstIndex == 0) && (queue->freeIndex == QUEUE_SIZE - 1)));
-	return (!nextIndex(queue->freeIndex));
+	return (!nextIndex(queue->freeIndex)); // if index of next is not "start" index (0)
 }
 
 /**
@@ -168,9 +166,9 @@ void Queue_Remove( Queue *queue ) {
 		Queue_Error(QERR_REMOVE);
 	else 
 	{
-		if (!nextIndex(queue->firstIndex))
-			queue->firstIndex = 0;
-		queue->firstIndex++;
+		if (!nextIndex(queue->firstIndex)) // if next from first exists
+			queue->firstIndex = 0; // remove first
+		queue->firstIndex++; // inc
 	}
 }
 
@@ -189,8 +187,8 @@ void Queue_Dequeue( Queue *queue, char *dataPtr ) {
 		Queue_Error(QERR_DEQUEUE);
 	else
 	{
-		Queue_Front(queue, dataPtr);
-		Queue_Remove(queue);
+		Queue_Front(queue, dataPtr); // ret of element on start position of queue
+		Queue_Remove(queue); // delete it
 	}
 }
 
@@ -211,7 +209,7 @@ void Queue_Enqueue( Queue *queue, char data ) {
 		Queue_Error(QERR_ENQUEUE);
 	else
 	{
-		queue->array[queue->freeIndex] = data;
+		queue->array[queue->freeIndex] = data; // char data on next
 		if (!nextIndex(queue->freeIndex))
 			queue->freeIndex = 0;
 		queue->freeIndex++;

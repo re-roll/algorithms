@@ -90,10 +90,10 @@ void List_Dispose( List *list ) {
 	while (list->firstElement != NULL)
 	{
 		elemPtr = list->firstElement;
-		list->firstElement = list->firstElement->nextElement;
+		list->firstElement = list->firstElement->nextElement; //inc of "first element"
 		free(elemPtr);
 	}
-	List_Init(list);
+	List_Init(list); // to position "init"
 }
 
 /**
@@ -110,9 +110,9 @@ void List_InsertFirst( List *list, int data ) {
 	if (newElemPtr == NULL)
 		List_Error();
 	
-	newElemPtr->data = data;
-	newElemPtr->nextElement = list->firstElement;
-	list->firstElement = newElemPtr;
+	newElemPtr->data = data; // data
+	newElemPtr->nextElement = list->firstElement; // ptr to start
+	list->firstElement = newElemPtr; // start is ptr to new
 }
 
 /**
@@ -122,7 +122,7 @@ void List_InsertFirst( List *list, int data ) {
  * @param list Ukazatel na inicializovanou strukturu jednosměrně vázaného seznamu
  */
 void List_First( List *list ) {
-	list->activeElement = list->firstElement;
+	list->activeElement = list->firstElement; // first is active
 }
 
 /**
@@ -133,8 +133,8 @@ void List_First( List *list ) {
  * @param dataPtr Ukazatel na cílovou proměnnou
  */
 void List_GetFirst( List *list, int *dataPtr ) {
-	if (list->firstElement != NULL)
-		*dataPtr = list->firstElement->data;
+	if (list->firstElement != NULL) // if is not empty
+		*dataPtr = list->firstElement->data; // return data of first
 	else
 		List_Error();
 }
@@ -149,17 +149,17 @@ void List_GetFirst( List *list, int *dataPtr ) {
 void List_DeleteFirst( List *list ) {
 	ListElementPtr elemPtr;
 
-	if (list->firstElement != NULL)
+	if (list->firstElement != NULL) // if is not empty
 	{
-		if (list->activeElement == list->firstElement)
-			list->activeElement = NULL;
-		if (list->firstElement->nextElement != NULL)
+		if (list->activeElement == list->firstElement) // first is active
+			list->activeElement = NULL; // not active
+		if (list->firstElement->nextElement != NULL) // only one element exists
 		{
-			elemPtr = list->firstElement;
-			list->firstElement = elemPtr->nextElement;
+			elemPtr = list->firstElement; // ptr to first (we will delete this element later)
+			list->firstElement = elemPtr->nextElement; // first is now the next from previous first
 		}
 		else
-			list->firstElement = NULL;
+			list->firstElement = NULL; 
 		free(elemPtr);
 	}
 }
@@ -174,12 +174,12 @@ void List_DeleteFirst( List *list ) {
 void List_DeleteAfter( List *list ) {
 	ListElementPtr elemPtr;
 
-	if (list->activeElement != NULL)
+	if (List_IsActive(list))
 	{
-		if (list->activeElement->nextElement != NULL)
+		if (list->activeElement->nextElement != NULL) // next exists
 		{
-			elemPtr = list->activeElement->nextElement;
-			list->activeElement->nextElement = elemPtr->nextElement;
+			elemPtr = list->activeElement->nextElement; // ptr to next
+			list->activeElement->nextElement = elemPtr->nextElement; // "switch"
 			free(elemPtr);
 		}
 	}
@@ -203,8 +203,8 @@ void List_InsertAfter( List *list, int data ) {
 			List_Error();
 		
 		newElemPtr->data = data;
-		newElemPtr->nextElement = list->activeElement->nextElement;
-		list->activeElement->nextElement = newElemPtr;
+		newElemPtr->nextElement = list->activeElement->nextElement; // ptr to active
+		list->activeElement->nextElement = newElemPtr; // active is ptr to new
 	}
 }
 
@@ -230,8 +230,8 @@ void List_GetValue( List *list, int *dataPtr ) {
  * @param data Nová hodnota právě aktivního prvku
  */
 void List_SetValue( List *list, int data ) {
-	if (list->activeElement != NULL)
-		list->activeElement->data = data;	
+	if (List_IsActive(list))
+		list->activeElement->data = data; // int data will be in active element
 }
 
 /**
@@ -242,8 +242,8 @@ void List_SetValue( List *list, int data ) {
  * @param list Ukazatel na inicializovanou strukturu jednosměrně vázaného seznamu
  */
 void List_Next( List *list ) {
-	if (list->activeElement != NULL)
-		list->activeElement = list->activeElement->nextElement;
+	if (List_IsActive(list))
+		list->activeElement = list->activeElement->nextElement; // next is active
 }
 
 /**
