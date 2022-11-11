@@ -95,7 +95,7 @@ void bst_insert(bst_node_t **tree, char key, int value) {
 				else
 					found = true;
 			}
-		}while (!found && (helpTree != NULL));
+		}while (!found && helpTree != NULL);
 	}
 	
 	if (found == true)
@@ -203,10 +203,26 @@ void bst_delete(bst_node_t **tree, char key) {
  * vlastných pomocných funkcií.
  */
 void bst_dispose(bst_node_t **tree) {
-	if (*tree != NULL){
-		bst_dispose(&(*tree)->left);
-		bst_dispose(&(*tree)->right);
-		free(*tree);
+	if (tree != NULL){
+		stack_bst_t stack;
+		stack_bst_init(&stack);
+		do
+		{
+			if (*tree == NULL){
+				if (!stack_bst_empty(&stack)){
+					*tree = stack_bst_top(&stack);
+					stack_bst_pop(&stack);
+				}
+			}
+			else{
+				if ((*tree)->right != NULL)
+					stack_bst_push(&stack, (*tree)->right);
+				bst_node_t *helpTree = *tree;
+				*tree = (*tree)->left;
+				free(helpTree);
+			}
+		} while (!stack_bst_empty(&stack) && *tree != NULL);
+		
 	}
 
 	*tree = NULL;
