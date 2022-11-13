@@ -137,7 +137,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
 	if (whereNode != NULL){
 		target->key = whereNode->right->key;
 		target->value = whereNode->right->value;
-		whereNode->right = helpTree->right;
+		whereNode->right = helpTree->left;
 	}
 
 	free(helpTree);
@@ -187,7 +187,7 @@ void bst_delete(bst_node_t **tree, char key) {
 				free(helpTree);
 			}
 			else
-				bst_replace_by_rightmost(helpTree, &helpTree->right);
+				bst_replace_by_rightmost(helpTree, &helpTree->left);
 		}
 	}
 }
